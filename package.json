@@ -1,0 +1,15 @@
+{
+  "name": "cmdoska9_6",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node .",
+    "test": "node ."
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "fancy-log": "^1.3.3",
+    "readline-sync": "^1.4.10"
+  }
+}
