@@ -1,7 +1,5 @@
-const chalk = require("chalk");
-
-module.exports.init = () => {
-    require("./cm_init.js").startup();
+module.exports.init = (shutdown) => {
+    require("./cm_init.js").startup(shutdown);
 }
 module.exports.shutdown = () => {
     require("./cm_init.js").shutdown();
