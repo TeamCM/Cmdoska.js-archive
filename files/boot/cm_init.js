@@ -4,6 +4,7 @@ module.exports.startup = (shutdown1) => {
     console.log(chalk.green("Cmdoska INIT v1.0")+"\n");
     console.log(chalk.green("> Starting services"));
     require("fs").readdirSync("./files/etc/services").forEach(function(srv){
+        if(srv.includes(".notdead")) return;
         let service = require(`../etc/services/${srv}`);
         service.name ? undefined : service.name = srv.replace(/\.js/, "");
         console.log(chalk.blue("--> ")+chalk.green(`Starting ${service.name}...`));
@@ -21,6 +22,7 @@ module.exports.shutdown = () => {
     if(!require("fs").existsSync("./files/etc/services")) return "Cant get services folder";
     console.log(chalk.blue("> Stopping Services"));
     require("fs").readdirSync("./files/etc/services").forEach(function(srv){
+        if(srv.includes(".notdead")) return;
         let service = require(`../etc/services/${srv}`);
         return service.stop ? (function(){
             service.name ? undefined : service.name = srv.replace(/\.js/, "");
