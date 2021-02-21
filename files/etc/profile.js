@@ -1,6 +1,12 @@
-const { shutdown } = require("../boot/cm_init");
+const fs = require("fs");
+const path = require("path");
 
-module.exports = (shutdown) => {
+module.exports = () => {
     let sh = "sh";
-    require(`../usr/bin/${sh}.js`).run(shutdown);
+    while (true){
+        if(fs.existsSync(path.join(__dirname, `../usr/bin/${sh}.js`))){
+            require(`../usr/bin/${sh}.js`).run();
+        }
+        else return "Cannot find shell to execute!";
+    }
 }
