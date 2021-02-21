@@ -1,4 +1,5 @@
 function start(){
+    console.clear();
     console.log("Cmdoska 9.6, By TeamCM");
     let reason = require("./files/boot/init.js").init(shutdown);
 
@@ -7,6 +8,7 @@ function start(){
 }
 
 function shutdown(){
+    console.clear();
     console.log("Closing INIT");
     let warning = require("./files/boot/init.js").shutdown();
 
