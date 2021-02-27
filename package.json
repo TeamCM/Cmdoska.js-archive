@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.0",
-    "readline-sync": "^1.4.10"
+    "readline-sync": "^1.4.10",
+    "yargs": "^16.2.0"
   }
 }

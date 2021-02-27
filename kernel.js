@@ -1,36 +1,35 @@
 function start(){
     console.clear();
     console.log("Cmdoska 9.6, By TeamCM");
-    let reason = require("./files/boot/init.js").init(shutdown);
-
-    console.error("ERROR! Error trying to start init. Reason: "+reason);
-    process.exit(1);
+    require("./files/boot/init.js").init(require("yargs").argv._[0]==="rsh");
 }
 
-function shutdown(){
+function requestShutdown(){
     console.clear();
-    console.log("Closing INIT");
-    let warning = require("./files/boot/init.js").shutdown();
+    console.log("Shutdown by an root app, requesting to close init");
+    require("./files/boot/init.js").shutdown();
 
-    //Init system will return an warning if error/warning is detected
-    warning != true && warning != undefined ? console.warn("WARNING: INIT system exited with an error reason! Reason: "+warning) : undefined;
-    
+    return true;
+}
+async function shutdown(k = "", err = undefined){
+    if(k != "kernel_panic") {console.log("Shutdown from init system")} else {console.log("KERNEL PANIC\n"+err.message)}
     console.log("SHUTDOWNING!");
-    process.exit(0);
+    return process.exit(0);
 }
 
+module.exports.requestShutdown = requestShutdown;
 module.exports.shutdown = shutdown;
 
 process.on("SIGINT", () => {})
 .on("SIGTERM", () => {
     shutdown();
 })
-.on("warning", warn => {
+/*.on("warning", warn => {
     console.warn("WARNING: "+ warn);
-})
+})*/
 .on("uncaughtException", err => {
-    console.error("ERROR: "+err.message);
-    shutdown();
+    console.log("[Debug] kp detected!");
+    shutdown("kernel_panic", err);
 });
 
 start();

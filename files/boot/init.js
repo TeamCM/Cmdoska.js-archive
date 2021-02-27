@@ -3,17 +3,29 @@ const path = require("path");
 
 //Edit this to change what init system to use
 let init = "cm_init";
-module.exports.init = (shutdown) => {
-    if(!fs.existsSync(path.join(__dirname, `./${init}.js`))){
-        if(!fs.existsSync(path.join(__dirname, `../usr/bin/sh.js`))) return `Cannot find "${init}.js" and Recovery Shell`;
-        else require(`../usr/bin/sh.js`).run();
-        return `Recovery shell exited.`
+module.exports.init = async (rsh = false) => {
+    if(!fs.existsSync(path.join(__dirname, `./${init}.js`)) || rsh){
+        if(!fs.existsSync(path.join(__dirname, `./rsh.js`))) require("../../kernel.js").shutdown();
+        let newInit = await require(`./rsh.js`).run();
+        newInit = newInit[1];
+        if(!newInit) return require("../../kernel.js").shutdown();
+        let rsh;
+        try {
+            rsh = require("./"+newInit);
+        } catch {
+            require("../../kernel.js").shutdown();
+        }
+        rsh.startup ? (function(){init = newInit;rsh.startup();}.call()) : require("../../kernel.js").shutdown();
     }
     console.log("INIT: Starting "+init);
-    return require(`./${init}.js`).startup(shutdown);
+    return require(`./${init}.js`).startup();
 }
-module.exports.shutdown = () => {
-    if(!fs.existsSync(path.join(__dirname, `./${init}.js`))) return `ERROR! Cannot find ${init}.js`;
+module.exports.shutdown = async () => {
+    if(!fs.existsSync(path.join(__dirname, `./${init}.js`))) {
+        console.log(`${init} is not found! trying to shutdown`);
+        await require("../../kernel.js").shutdown();
+        return
+    }
     console.log("INIT: Stopping "+init);
     return require(`./${init}.js`).shutdown();
 }

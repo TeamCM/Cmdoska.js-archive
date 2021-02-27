@@ -14,6 +14,7 @@ module.exports.run = () => {
         let cmd = command.split(" ")[0];
         let args = command.split(" ").slice(1).join(" ");
 
+
         if(cmd == ""){void 0;}
         else if(cmd == "exit"){return 0;}
         else {
@@ -21,7 +22,7 @@ module.exports.run = () => {
                 try {
                     require(`./${cmd}.js`).run(args);
                 } catch (err) {
-                    console.error(chalk.red(`Was an error trying to execute ${cmd}. ${err.message}`));
+                    console.error(chalk.red(`Was an error trying to execute ${cmd}. ${err.message ? err.message : err}`));
                 }
             }
 
@@ -29,15 +30,15 @@ module.exports.run = () => {
                 try {
                     require(path.join(shDir, `./${cmd}.js`)).run(args);
                 } catch (err) {
-                    console.error(chalk.red(`Was an error trying to execute ${cmd}. ${err.message}`));
+                    console.error(chalk.red(`Was an error trying to execute ${cmd}. ${err.message ? err.message : err}`));
                 }
             }
             else if(fs.existsSync(path.join(shDir, `../../sbin/${cmd}.js`))){
                 try {
-                    let shutdown = require("../../../kernel.js").shutdown;
-                    require(path.join(shDir, `../../sbin/${cmd}.js`)).run(args, shutdown);
+                    let requestShutdown = require("../../../kernel.js").requestShutdown;
+                    require(path.join(shDir, `../../sbin/${cmd}.js`)).run(args, requestShutdown);
                 } catch (err) {
-                    console.error(chalk.red(`Was an error trying to execute ${cmd}. ${err.message}`));
+                    console.error(chalk.red(`Was an error trying to execute ${cmd}. ${err.message ? err.message : err}`));
                 }
             }
 
