@@ -9,13 +9,13 @@ module.exports.init = async (rsh = false) => {
         let newInit = await require(`./rsh.js`).run();
         newInit = newInit[1];
         if(!newInit) return require("../../kernel.js").shutdown();
-        let rsh;
+        let rsh_shell;
         try {
-            rsh = require("./"+newInit);
+            rsh_shell = require("./"+newInit);
         } catch {
             require("../../kernel.js").shutdown();
         }
-        rsh.startup ? (function(){init = newInit;rsh.startup();}.call()) : require("../../kernel.js").shutdown();
+        rsh_shell.startup ? (function(){init = newInit;rsh_shell.startup();}.call()) : require("../../kernel.js").shutdown();
     }
     console.log("INIT: Starting "+init);
     return require(`./${init}.js`).startup();
